@@ -1,0 +1,17 @@
+#!/bin/bash
+
+date=$(date +%F -d -1day)
+cd /var/log/nginx/
+if [ ! -d cut ] ; then
+        mkdir cut
+fi
+mv access.log cut/access_$(date +%F -d -1day).log
+mv error.log cut/error_$(date +%F -d -1day).log
+nginx -s reload
+tar -zcvf cut/$date.tar.gz cut/*
+rm -rf cut/access* && rm -rf cut/error*
+cat >>/var/spool/cron/root<<eof
+00 00 * * * /bin/sh /root/cut_nginx_log.sh >/dev/null 2>&1
+eof
+find -type f -mtime +5 | xargs rm -rf
+

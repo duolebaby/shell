@@ -108,10 +108,10 @@ EOF
 
 for i in `cat list`
 do
-   if [ ! -x $i ];then
-   echo "$i not found,no md5sum!"
+  if [ ! -x $i ];then
+    echo "$i not found,no md5sum!"
   else
-   md5sum $i >> /var/log/`hostname`.log
+    md5sum $i >> /var/log/`hostname`.log
   fi
 done
 rm -f list

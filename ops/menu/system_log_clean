@@ -1,0 +1,19 @@
+#!/bin/bash
+#clear /var/log/message
+#确定当前是不是 root 用户
+if [ $USER != "root" ];then
+	echo "你必须使用 root 用户才能执行这个脚本"
+	exit 10
+fi
+#判断日志文件在不在
+if [ ! -f /var/log/messages ];then
+	echo "文件不存在"
+	exit 11
+fi
+#保留最近 100 行的日志内容
+tail -100 /var/log/messages > /var/log/mesg.tmp
+#日志清理
+>/var/log/messages
+cat /var/log/mesg.tmp >> /var/log/messages
+mv /var/log/mesg.tmp /var/log/messages
+echo "Logs clean up"

@@ -1,0 +1,29 @@
+#!/bin/sh
+[ -f /etc/init.d/functions ]&& . /etc/init.d/functions
+
+usages(){
+       echo "USAGE:$0 url"
+       exit 1
+
+}
+RETVAL=0
+CheckUrl(){
+    wget -T 10 --spider -t 2 $1 &>/dev/null
+    RETVAL=$?
+    if [ $RETVAL -eq 0 ];then
+         action "$1 url" /bin/true
+    else
+        action "$1 url" /bin/false
+
+    fi
+    return $RETVAL
+}
+main(){
+  if [ $# -ne 1 ];then
+     usages
+  fi
+
+  CheckUrl $1
+
+}
+main $*
